@@ -1,0 +1,10 @@
+CSS Editor  module for Omeka S
+============================
+
+This [Omeka S] module is a rewrite of [CSS Editor plugin for Omeka].
+Features : allow to put specific css on all pages or/and put  css on a specific site.
+
+
+
+[CSS Editor plugin for Omeka]: https://omeka.org/add-ons/plugins/css-editor/
+[Omeka S]: https://github.com/omeka/omeka-s
