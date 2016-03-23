@@ -1,11 +1,31 @@
 <div class="field">
-    <div class="two columns alpha">
-        <label for="css"><?php echo $translator->translate('CSS'); ?></label>
+  <div class="two columns alpha">
+    <label for="css"><?php echo $translator->translate('CSS'); ?></label>
+  </div>
+  <div class="inputs five columns omega">
+    <p class="explanation"><?php echo $translator->translate('The custom CSS you would like to add.'); ?></p>
+
+
+    <div id="csseditor_site">
+      <?php
+      echo $this->siteSelect()->render('site'); ?>
     </div>
-    <div class="inputs five columns omega">
-        <p class="explanation"><?php echo $translator->translate('The custom CSS you would like to add.'); ?></p>
-        <div class="input-block">
-            <?php echo $this->formTextarea($textarea); ?>
-        </div>
+    <div >
+      <?php echo $this->formTextarea($textarea);
+      ?>
     </div>
+  </div>
 </div>
+
+
+<script>
+ $("#csseditor_site select").change(function() {
+   $.ajax({
+     'url' : '<?php echo $this->url('admin/csseditor'); ?>'+($(this).val()?'/'+$(this).val():''),
+     'type' : 'get',
+     'success' : function(data) {
+       $('#csseditor_cssvalue').html(data);
+
+     }
+   })});
+</script>
