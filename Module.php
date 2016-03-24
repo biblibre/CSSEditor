@@ -1,7 +1,6 @@
 <?php
 namespace CSSEditor;
 use Omeka\Module\AbstractModule;
-use Omeka\Service\HtmlPurifier;
 use Zend\Mvc\Controller\AbstractController;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\Form\Element\Textarea;
@@ -37,17 +36,19 @@ class Module extends AbstractModule
 
   public function handleConfigForm(AbstractController $controller) {
     require_once dirname(__FILE__) . '/src/CSSTidy/class.csstidy.php';
-    $purifier=new HTMLPurifier(true);
-    $config = $purifier->getConfig();
+
+    $config = \HTMLPurifier_Config::createDefault();
     $config->set('Filter.ExtractStyleBlocks', TRUE);
     $config->set('CSS.AllowImportant', TRUE);
     $config->set('CSS.AllowTricky', TRUE);
     $config->set('CSS.Proprietary', TRUE);
     $config->set('CSS.Trusted', TRUE);
-    $purifier->setConfig($config);
-    $html=$purifier->purify('<style>' . $controller->getRequest()->getPost('css',''). '</style>');
+    $purifier = new \HTMLPurifier($config);
 
-    $clean_css = $purifier->getPurifier()->context->get('StyleBlocks');
+    $css = $controller->getRequest()->getPost('css','');
+    $purifier->purify("<style>$css</style>");
+
+    $clean_css = $purifier->context->get('StyleBlocks');
     $clean_css = $clean_css[0];
     $site_selected = $controller->getRequest()->getPost('site','');
     if ($site_selected=='')
