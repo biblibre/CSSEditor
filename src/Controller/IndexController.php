@@ -25,7 +25,7 @@ class IndexController extends AbstractActionController
 
     $settings = $serviceLocator->get('Omeka\SiteSettings');
     if (!$site=$serviceLocator->get('Omeka\EntityManager')->find('Omeka\Entity\Site',$site_id))
-      return $response
+      return $response;
     $settings->setSite($site);
 
     $css=$settings->get('css_editor_css');
