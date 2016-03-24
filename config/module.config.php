@@ -1,31 +1,35 @@
 <?php
-return [
-    'controllers' => [
-        'invokables' => [
-                         'CSSEditor\Controller\Index' => 'CSSEditor\Controller\IndexController',
+return
+    [ 'controllers' => [
+          'invokables' => [
+               'CSSEditor\Controller\Index' => 'CSSEditor\Controller\IndexController',
+          ],
         ],
-    ],
-        'router' =>[
-                    'routes' => [
+     'router' =>[
+          'routes' => [
+               'admin' => [
+                   'child_routes' => [
+                       'csseditor' => [
+                            'type' => 'segment',
+                            'options' => [
+                                'route' => '/csseditor/browse[/:id]',
+                                'defaults' => [
+                                               '__NAMESPACE__' => 'CSSEditor\Controller',
+                                               'controller' => 'Index',
+                                               'action' => 'browse',
+                                ],
+                            ],
+                       ]
+                   ]]]],
 
-                                 'admin' => [
-                                             'child_routes' => [
-                                                                'csseditor' => [
-                                                                                'type' => 'segment',
-                                                                                'options' => [
-                                                                                              'route' => '/csseditor/browse[/:id]',
+     'view_helpers' => [
+         'invokables' => [
+             'SiteSelect' => 'CSSEditor\View\Helper\SiteSelect',
+        ],
+  ],
 
-                                                               'defaults' => [
-                                                                              '__NAMESPACE__' => 'CSSEditor\Controller',
-                                                                              'controller' => 'Index',
-                                                                              'action' => 'browse',
-                                                               ],
-                                                 ],
-                                 ]
-                    ]]]],
-
-        'view_manager' => array(
-                                'template_path_stack' => array(
-                                                                 __DIR__ . '/../view',
-                                  ),
-  ),];
+ 'view_manager' => [
+      'template_path_stack' => [
+                                __DIR__ . '/../view',
+      ]
+ ]];

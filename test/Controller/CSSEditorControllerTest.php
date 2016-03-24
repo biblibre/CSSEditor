@@ -80,6 +80,7 @@ class CSSEditorSiteControllerTest  extends AbstractHttpControllerTestCase{
     $this->dispatch('/s/test');
     $this->assertXPathQuery('//style[@type="text/css"][@media="screen"]');
     $this->assertContains('h2 { color:black;}',$this->getResponse()->getContent());
+    $this->assertNotContains('h1 {',$this->getResponse()->getContent());
   }
 
   protected function getSiteSettings() {
