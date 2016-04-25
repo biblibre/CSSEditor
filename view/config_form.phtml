@@ -3,18 +3,22 @@
     <label for="css"><?php echo $this->translate('CSS'); ?></label>
   </div>
   <div class="inputs five columns omega">
-    <p class="explanation"><?php echo $this->translate('Add custom CSS for sites.'); ?><br/>
-      <?php echo $this->translate('Note : Defined css for \'All sites\' will be set only if no css is defined for a specific site.'); ?><br/>
-      <?php echo $this->translate('Warning : the following tags can\'t be modified:'); ?>
-      <b>body, head, html</b>
+    <p class="explanation">
+      <?php echo $this->translate('Add custom CSS for sites.'); ?><br/>
+      <?php echo $this->translate("Note: CSS rules defined for 'Default' will only be used if no CSS is defined for a specific site in this module."); ?><br/>
+      <?php echo $this->translate('Warning: the following tags cannot be used in selectors:'); ?>
+      <b>body, head, html</b>.<br/>
+      <?php echo sprintf($this->translate('For instance, if you define a rule like %s, it will be removed when submitting your changes.'), '<code>body {color: red;}</code>'); ?>
     </p>
     <div id="csseditor_site">
       <?php
-      echo $this->siteSelect()->render('site'); ?>
-    </div>
-    <div >
-      <?php echo $this->formTextarea($textarea);
+        echo $this->siteSelect()
+          ->setEmptyOption($this->translate('Default'))
+          ->render('site');
       ?>
+    </div>
+    <div>
+      <?php echo $this->formTextarea($textarea); ?>
     </div>
   </div>
 </div>
