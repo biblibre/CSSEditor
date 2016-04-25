@@ -22,13 +22,14 @@ use Omeka\Event\Event;
 class Module extends AbstractModule {
     public function getConfigForm(PhpRenderer $renderer) {
         $serviceLocator = $this->getServiceLocator();
+        $settings = $serviceLocator->get('Omeka\Settings');
+
         $textarea = new Textarea('css');
         $textarea->setAttribute('rows', 15);
-        $textarea->setValue($serviceLocator->get('Omeka\Settings')->get('css_editor_css'));
-        $textarea->setAttribute('id','csseditor_cssvalue');
-        return $renderer->render('config_form',[
-                                                'textarea' => $textarea
-                                                ]);
+        $textarea->setValue($settings->get('css_editor_css'));
+        $textarea->setAttribute('id', 'csseditor_cssvalue');
+
+        return $renderer->render('config_form', ['textarea' => $textarea]);
     }
 
     public function handleConfigForm(AbstractController $controller) {
@@ -42,33 +43,38 @@ class Module extends AbstractModule {
         $config->set('CSS.Trusted', TRUE);
         $purifier = new \HTMLPurifier($config);
 
-        $css = $controller->getRequest()->getPost('css','');
+        $css = $controller->getRequest()->getPost('css', '');
         $purifier->purify("<style>$css</style>");
 
         $clean_css = $purifier->context->get('StyleBlocks');
         $clean_css = $clean_css[0];
-        $site_selected = $controller->getRequest()->getPost('site','');
-        if ($site_selected=='')
+        $site_selected = $controller->getRequest()->getPost('site', '');
+        if ($site_selected == '') {
             return $this->setOption('css_editor_css', $clean_css);
+        }
 
-        return $this->setSiteOption($site_selected,'css_editor_css', $clean_css);
+        $this->setSiteOption($site_selected, 'css_editor_css', $clean_css);
+
+        return true;
     }
 
     public function setOption($name, $value) {
         $serviceLocator = $this->getServiceLocator();
-        return  $serviceLocator->get('Omeka\Settings')->set($name,$value);
+        return $serviceLocator->get('Omeka\Settings')->set($name,$value);
     }
 
-
-    public function setSiteOption($site_id,$name, $value) {
+    protected function setSiteOption($site_id, $name, $value) {
         $serviceLocator = $this->getServiceLocator();
-        $settings = $serviceLocator->get('Omeka\SiteSettings');
-        if (!$site=$serviceLocator->get('Omeka\EntityManager')->find('Omeka\Entity\Site',$site_id))
-            return false;
-        $settings->setSite($site);
-        return $settings->set($name,$value);
-    }
+        $siteSettings = $serviceLocator->get('Omeka\SiteSettings');
+        $entityManager = $serviceLocator->get('Omeka\EntityManager');
 
+        if ($site = $entityManager->find('Omeka\Entity\Site', $site_id)) {
+            $siteSettings->setSite($site);
+            return $siteSettings->set($name, $value);
+        }
+
+        return false;
+    }
 
     public function appendCss(Event $event) {
         $serviceLocator = $this->getServiceLocator();
@@ -85,11 +91,9 @@ class Module extends AbstractModule {
         }
     }
 
-
     public function attachListeners(SharedEventManagerInterface $sharedEventManager) {
         $sharedEventManager->attach('*', 'view.layout', [$this, 'appendCss']);
     }
-
 
     public function getConfig() {
         return include __DIR__ . '/config/module.config.php';

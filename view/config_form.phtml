@@ -21,13 +21,18 @@
 
 
 <script>
- $("#csseditor_site select").change(function() {
-   $.ajax({
-     'url' : '<?php echo $this->url('admin/csseditor'); ?>'+($(this).val()?'/'+$(this).val():''),
-     'type' : 'get',
-     'success' : function(data) {
-       $('#csseditor_cssvalue').html(data);
-
-     }
-   })});
+  $("#csseditor_site select").change(function() {
+    var url = '<?php echo $this->url('admin/csseditor'); ?>';
+    var site_id = $(this).val();
+    if (site_id) {
+        url += '/' + site_id;
+    }
+    $.ajax({
+      'url' : url,
+      'type': 'get',
+      'success': function(data) {
+        $('#csseditor_cssvalue').html(data);
+      }
+    });
+  });
 </script>

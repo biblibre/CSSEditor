@@ -9,7 +9,6 @@ use Zend\Form\Element\Select;
  */
 class SiteSelect extends AbstractSelect
 {
-
     public function getValueOptions()
     {
         $this->emptyOption = $this->getView()->translate('All sites');
@@ -21,6 +20,4 @@ class SiteSelect extends AbstractSelect
 
         return  $options;
     }
-
-
 }
