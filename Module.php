@@ -20,7 +20,6 @@ use Omeka\Event\Event;
  */
 
 class Module extends AbstractModule {
-    protected $css_already_set=false;
     public function getConfigForm(PhpRenderer $renderer) {
         $serviceLocator = $this->getServiceLocator();
         $textarea = new Textarea('css');
@@ -71,42 +70,24 @@ class Module extends AbstractModule {
     }
 
 
-    public function addCssToPublicHead(Event  $event) {
-        if ($this->css_already_set)
-            return true;
+    public function appendCss(Event $event) {
         $serviceLocator = $this->getServiceLocator();
-        $css = $serviceLocator->get('Omeka\Settings')->get('css_editor_css');
-        if ($css)
-            $event->getTarget()->headStyle()->appendStyle($css);
+        $siteSettings = $serviceLocator->get('Omeka\SiteSettings');
+        $settings = $serviceLocator->get('Omeka\Settings');
+        $routeMatch = $serviceLocator->get('Application')->getMvcEvent()->getRouteMatch();
+        $isSite = $routeMatch->getParam('__SITE__');
+        $view = $event->getTarget();
 
-    }
-
-
-    public function addCssToSite(Event $event) {
-
-        $settings = $this->getServiceLocator()->get('Omeka\SiteSettings');
-        try {
-            if ($css=$settings->get('css_editor_css')) {
-                $event->getTarget()->headStyle()->appendStyle($css);
-                $this->css_already_set=true;
-            }
-        } catch (Exception $e) {return false;}
-
+        if ($isSite && $css = $siteSettings->get('css_editor_css')) {
+            $view->headStyle()->appendStyle($css);
+        } elseif ($css = $settings->get('css_editor_css')) {
+            $view->headStyle()->appendStyle($css);
+        }
     }
 
 
     public function attachListeners(SharedEventManagerInterface $sharedEventManager) {
-
-        $sharedEventManager->attach(['Omeka\Controller\Site\Index',
-                                     'Omeka\Controller\Site\Item',
-                                     'Omeka\Controller\Site\ItemSet',
-                                     'Omeka\Controller\Site\Media',
-                                     'Omeka\Controller\Site\Page'],
-                                    'view.layout', [$this, 'addCssToSite']);
-
-        $sharedEventManager->attach('*',
-                                    'view.layout', [$this, 'addCssToPublicHead']);
-
+        $sharedEventManager->attach('*', 'view.layout', [$this, 'appendCss']);
     }
 
 
