@@ -21,7 +21,14 @@ class IndexController extends AbstractActionController {
             $response->setContent($this->getCssForAllSites());
             return $response;
         }
-
+        if ($this->getRequest()->isPost()) {
+            if ($this->savecss($site_id)) {
+                $response->setStatusCode('400');
+                $response->setContent('Css couldn\'t be saved');
+                return $response;
+            }
+            $site_id=$this->getRequest()->getPost('site');
+        }
         $settings = $serviceLocator->get('Omeka\SiteSettings');
         if (!$site=$serviceLocator->get('Omeka\EntityManager')->find('Omeka\Entity\Site',$site_id))
             return $response;
@@ -30,6 +37,12 @@ class IndexController extends AbstractActionController {
         $css=$settings->get('css_editor_css');
         $response->setContent($css);
         return $response;
+    }
+
+    public function savecss($site_id) {
+        $moduleObject = $this->getServiceLocator()
+            ->get('ModuleManager')->getModule('CSSEditor');
+        return $moduleObject->handleConfigForm($this);
     }
 
     protected function getCssForAllSites() {
