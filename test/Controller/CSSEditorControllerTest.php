@@ -52,6 +52,7 @@ class CSSEditorSiteControllerTest  extends AbstractHttpControllerTestCase{
     $module = $manager->getModule('CSSEditor');
     $manager->install($module);
     $this->site_test=$this->addSite('test');
+    $this->site_test2=$this->addSite('test2');
     parent::setUp();
     $this->connectAdminUser();
   }
@@ -96,6 +97,25 @@ class CSSEditorSiteControllerTest  extends AbstractHttpControllerTestCase{
     $this->postDispatch('/admin/module/configure?id=CSSEditor', ['css' => "h1{display:inline;}", 'site' =>$this->site_test->getId()]);
     $this->assertEquals("h1 {\ndisplay:inline\n}",$this->getSiteSettings()->get('css_editor_css'));
   }
+
+
+  /** @test */
+  public function postBrowseBeSavedForASiteAndReturnDefaultValue() {
+    $this->setSettings('css_editor_css','div {display:none}');
+    $this->postDispatch('/admin/csseditor/browse', ['css' => "h1{display:inline;}", 'site' =>$this->site_test->getId()]);
+    $this->assertContains('div {',$this->getResponse()->getContent());
+    $this->assertEquals("h1 {\ndisplay:inline\n}",$this->getSiteSettings()->get('css_editor_css'));
+  }
+
+
+  /** @test */
+  public function postBrowseBeSavedForASiteAndReturnValue() {
+    $this->postDispatch('/admin/csseditor/browse/'.(string)$this->site_test2->getId(), ['css' => "h1{display:inline;}", 'site' =>$this->site_test->getId()]);
+
+    $this->assertEquals('',$this->getResponse()->getContent() );
+    $this->assertEquals("h1 {\ndisplay:inline\n}",$this->getSiteSettings()->get('css_editor_css'));
+  }
+
 
 
 

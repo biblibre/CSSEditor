@@ -27,34 +27,49 @@
 
 <script>
  var prev_data= $('#csseditor_cssvalue').val();
- var prev_site_id=$('#csseditor_site_select').val();
+ var prev_site_id=$('#csseditor_site select').val();
+
  $("#csseditor_site select").change(function() {
-   var base_url = '<?php echo $this->url('admin/csseditor'); ?>';
    var site_id = $(this).val();
+
+   var base_url = '<?php echo $this->url('admin/csseditor'); ?>';
+
+
    var url = base_url;
 
    if (site_id) {
      url = base_url + '/' + site_id;
    }
 
-   $.ajax({
-     'url' : url,
-     'type': 'get',
-     'success': function(data) {
-       var current_val=$('#csseditor_cssvalue').val();
-       if (prev_data != current_val && confirm('<?php echo $this->translate('Do you want to save before switching ?') ?>') == true) {
-         $.post(base_url+'/'+site_id, { 'css': current_val,
-                                        'site' : prev_site_id})
-         .fail(function(data) {
-           alert(data.responseText);
-           return $('#csseditor_site_select').val(prev_site_id);
-         });
+   var current_val=$('#csseditor_cssvalue').val();
 
-       }
+   if (prev_data != current_val && confirm('<?php echo $this->translate('Do you want to save before switching ?') ?>') == true) {
+     $.post(base_url+'/'+site_id, { 'css': current_val,
+                                    'site' : prev_site_id})
+         .fail(function(data) {
+       alert(data.responseText);
+       $('#csseditor_site select').val(prev_site_id);
+
+
+
+     })
+         .done(function(data) {
        $('#csseditor_cssvalue').val(data);
        prev_data=data;
        prev_site_id=site_id;
-     }
-   });
+     });
+
+   }
+   else {
+     $.ajax({
+       'url' : url,
+       'type': 'get',
+       'success': function(data) {
+         $('#csseditor_cssvalue').val(data);
+         prev_data=data;
+         prev_site_id=site_id;
+       }
+     });
+   }
  });
 </script>
