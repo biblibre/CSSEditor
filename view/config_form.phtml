@@ -37,14 +37,14 @@
 
    var url = base_url;
 
-   if (site_id) {
+   if (site_id >0) {
      url = base_url + '/' + site_id;
    }
 
    var current_val=$('#csseditor_cssvalue').val();
 
    if (prev_data != current_val && confirm('<?php echo $this->translate('Do you want to save before switching ?') ?>') == true) {
-     $.post(base_url+'/'+site_id, { 'css': current_val,
+     $.post(url, { 'css': current_val,
                                     'site' : prev_site_id})
          .fail(function(data) {
        alert(data.responseText);

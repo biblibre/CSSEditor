@@ -50,7 +50,8 @@ class Module extends AbstractModule {
         $clean_css = $clean_css[0];
         $site_selected = $controller->getRequest()->getPost('site', '');
         if ($site_selected == '') {
-            return $this->setOption('css_editor_css', $clean_css);
+            $this->setOption('css_editor_css', $clean_css);
+            return true;
         }
 
         $this->setSiteOption($site_selected, 'css_editor_css', $clean_css);
