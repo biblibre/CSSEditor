@@ -117,6 +117,11 @@ class CSSEditorSiteControllerTest  extends AbstractHttpControllerTestCase{
   }
 
 
-
+  /** @test */
+  public function postBrowseBeSavedForDefaultSite() {
+    $this->postDispatch('/admin/csseditor/browse/'.(string)$this->site_test2->getId(), ['css' => "h1{display:inline;}", 'site' =>'']);
+    $this->assertEquals('',$this->getResponse()->getContent() );
+    $this->assertEquals("h1 {\ndisplay:inline\n}",$this->getApplicationServiceLocator()->get('Omeka\Settings')->get('css_editor_css'));
+  }
 
 }
