@@ -31,20 +31,28 @@
  var prev_data= $('#csseditor_cssvalue').val();
  var prev_site_id=$('#csseditor_site select').val();
 
-function saveCss() {
+ function saveCss() {
    var site_id = $('#csseditor_site select').val();
+   saveCssForSite(site_id,true);
+ }
+
+ function getBrowseCssUrl(site_id) {
    var base_url = '<?php echo $this->url('admin/csseditor'); ?>';
-   var current_val=$('#csseditor_cssvalue').val();
    var url = base_url;
-
-   if (site_id >0) {
-     url = base_url + '/' + site_id;
+   if (site_id>0) {
+     return base_url + '/' + site_id;
    }
+   return url;
+ }
 
-   $.post(url, { 'css': current_val,
-                 'site' : prev_site_id})
+ function saveCssForSite(site_id, display_popup_confirm=false) {
+
+   var current_val=$('#csseditor_cssvalue').val();
+
+   $.post(getBrowseCssUrl(site_id), { 'css': current_val,
+                                      'site' : prev_site_id})
          .fail(function(data) {
-       alert(data.responseText);
+     alert(data.responseText);
      $('#csseditor_site select').val(prev_site_id);
 
    })
@@ -52,7 +60,7 @@ function saveCss() {
      $('#csseditor_cssvalue').val(data);
      prev_data=data;
      prev_site_id=site_id;
-     alert('Css saved');
+     if (display_popup_confirm) {alert('Css saved');}
    });
 
  }
@@ -60,38 +68,17 @@ function saveCss() {
 
  $("#csseditor_site select").change(function() {
    var site_id = $(this).val();
-   var base_url = '<?php echo $this->url('admin/csseditor'); ?>';
-   var url = base_url;
-   if (site_id >0) {
-     url = base_url + '/' + site_id;
-   }
-
    var current_val=$('#csseditor_cssvalue').val();
 
    if (prev_data != current_val) {
      if (confirm('<?php echo $this->translate('Do you want to save before switching ?') ?>') == true) {
-     $.post(url, { 'css': current_val,
-                                    'site' : prev_site_id})
-         .fail(function(data) {
-       alert(data.responseText);
-       $('#csseditor_site select').val(prev_site_id);
-
-
-
-     })
-         .done(function(data) {
-       $('#csseditor_cssvalue').val(data);
-       prev_data=data;
-       prev_site_id=site_id;
-     });
-
+       saveCssForSite(site_id);
+     } else {
+       $('#csseditor_site select').val(prev_site_id);}
    }
-else {     $('#csseditor_site select').val(prev_site_id);}
-}
    else {
-
      $.ajax({
-       'url' : url,
+       'url' : getBrowseCssUrl(site_id),
        'type': 'get',
        'success': function(data) {
          $('#csseditor_cssvalue').val(data);
