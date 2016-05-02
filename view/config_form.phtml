@@ -44,7 +44,7 @@
 
  function restoreCss() {
    var site_id = $('#csseditor_site select').val();
-   if (confirm('<?php echo $this->translate('Do you want to cancel your modifications ?') ?>') == true) {
+   if (confirm("<?php echo $this->translate('Do you want to cancel your modifications ?') ?>") == true) {
      updateCssForSite(site_id,true);
 
    }
@@ -97,7 +97,7 @@
    var current_val=$('#csseditor_cssvalue').val();
 
    if (prev_data != current_val) {
-     if (confirm('<?php echo $this->translate('This will save your modifications and switch.') ?>') == true) {
+     if (confirm("<?php echo $this->translate('This will save your modifications and switch.') ?>") == true) {
        saveCssForSite(site_id);
      } else {
        $('#csseditor_site select').val(prev_site_id);}
