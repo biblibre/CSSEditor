@@ -12,9 +12,9 @@
     </p>
     <div id="csseditor_site">
       <?php
-        echo $this->siteSelect()
-          ->setEmptyOption($this->translate('Default'))
-          ->render('site');
+        echo $this->siteSelect('site', [
+            'empty_option' => $this->translate('Default'),
+        ]);
       ?>
     </div>
     <div>

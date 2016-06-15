@@ -1,23 +1,30 @@
 <?php
-namespace CSSEditor\View\Helper;
-use Omeka\View\Helper\AbstractSelect;
-use Zend\Form\Element\Select;
 
+namespace CSSEditor\View\Helper;
+
+use Zend\Form\Element\Select;
+use Zend\View\Helper\AbstractHelper;
 
 /**
  * A select menu containing all sites.
  */
-class SiteSelect extends AbstractSelect
+class SiteSelect extends AbstractHelper
 {
-    public function getValueOptions()
+    public function __invoke($name = null, $options = [])
     {
-        $this->emptyOption = $this->getView()->translate('All sites');
+        $element = new Select($name, $options);
+        $element->setValueOptions($this->getSiteOptions());
+        return $this->getView()->formSelect($element);
+    }
+
+    public function getSiteOptions()
+    {
         $sites = $this->getView()->api()->search('sites')->getContent();
         $options = [];
         foreach ($sites as $site) {
             $options[$site->id()] = $site->title();
         }
 
-        return  $options;
+        return $options;
     }
 }
