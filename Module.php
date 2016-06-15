@@ -29,7 +29,7 @@ class Module extends AbstractModule {
         $textarea->setValue($settings->get('css_editor_css'));
         $textarea->setAttribute('id', 'csseditor_cssvalue');
 
-        return $renderer->render('config_form', ['textarea' => $textarea]);
+        return $renderer->render('css-editor/config-form', ['textarea' => $textarea]);
     }
 
     public function handleConfigForm(AbstractController $controller) {
