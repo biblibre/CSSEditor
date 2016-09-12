@@ -1,53 +1,61 @@
 <?php
 namespace CSSEditor\Controller;
+
 use Zend\Mvc\Controller\AbstractActionController;
-use Omeka\Mvc\Exception\NotFoundException;
-use Zend\View\Model\ViewModel;
+use CSSEditor\Service\CssCleaner;
+
 /**
  * The plugin controller for css editor.
  *
  * @package CSSEditor
  */
-class IndexController extends AbstractActionController {
+class IndexController extends AbstractActionController
+{
+    protected $cssCleaner;
 
-    public function browseAction() {
-        $site_id=$this->params('id','');
-        $serviceLocator = $this->getServiceLocator();
+    public function __construct(CssCleaner $cssCleaner)
+    {
+        $this->cssCleaner = $cssCleaner;
+    }
+
+    public function browseAction()
+    {
         $response = $this->getResponse();
         $response->setContent('');
 
         if ($this->getRequest()->isPost()) {
-            if (!$this->savecss()) {
-                $response->setStatusCode('400');
-                $response->setContent('Css couldn\'t be saved');
-                return $response;
+            $css = $this->params()->fromPost('css');
+            $siteId = $this->params()->fromPost('site');
+
+            $css = $this->cssCleaner->clean($css);
+            if ($siteId) {
+                $siteSettings = $this->getSiteSettings($siteId);
+                $siteSettings->set('css_editor_css', $css);
+            } else {
+                $this->settings()->set('css_editor_css', $css);
             }
         }
 
-
-        if ($site_id == '') {
-            $response->setContent($this->getCssForAllSites());
-            return $response;
+        $site_id = $this->params('id', '');
+        if ($site_id) {
+            $settings = $this->getSiteSettings($site_id);
+        } else {
+            $settings = $this->settings();
         }
 
-        $settings = $serviceLocator->get('Omeka\SiteSettings');
-        if (!$site=$serviceLocator->get('Omeka\EntityManager')->find('Omeka\Entity\Site',$site_id))
-            return $response;
-        $settings->setSite($site);
+        if ($settings) {
+            $response->setContent($settings->get('css_editor_css'));
+        }
 
-        $css=$settings->get('css_editor_css');
-        $response->setContent($css);
         return $response;
     }
 
-    public function savecss() {
-        $moduleObject = $this->getServiceLocator()
-            ->get('ModuleManager')->getModule('CSSEditor');
-        return $moduleObject->handleConfigForm($this);
-    }
+    protected function getSiteSettings($siteId)
+    {
+        $site = $this->api()->read('sites', $siteId)->getContent();
+        $siteSettings = $this->siteSettings();
+        $siteSettings->setSite($site);
 
-    protected function getCssForAllSites() {
-        return ($this->getServiceLocator()->get('Omeka\Settings')->get('css_editor_css'));
+        return $siteSettings;
     }
-
 }

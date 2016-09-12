@@ -1,11 +1,16 @@
 <?php
 namespace CSSEditor;
-use Omeka\Module\AbstractModule;
+
+use HTMLPurifier;
+use HTMLPurifier_Config;
 use Zend\Mvc\Controller\AbstractController;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\Form\Element\Textarea;
 use Zend\EventManager\SharedEventManagerInterface;
 use Omeka\Event\Event;
+use Omeka\Module\AbstractModule;
+
+require __DIR__ . '/vendor/autoload.php';
 
 /**
  * CSS Editor
@@ -32,29 +37,19 @@ class Module extends AbstractModule {
         return $renderer->render('css-editor/config-form', ['textarea' => $textarea]);
     }
 
-    public function handleConfigForm(AbstractController $controller) {
-        require_once dirname(__FILE__) . '/src/CSSTidy/class.csstidy.php';
-
-        $config = \HTMLPurifier_Config::createDefault();
-        $config->set('Filter.ExtractStyleBlocks', TRUE);
-        $config->set('CSS.AllowImportant', TRUE);
-        $config->set('CSS.AllowTricky', TRUE);
-        $config->set('CSS.Proprietary', TRUE);
-        $config->set('CSS.Trusted', TRUE);
-        $purifier = new \HTMLPurifier($config);
+    public function handleConfigForm(AbstractController $controller)
+    {
+        $cssCleaner = $this->getServiceLocator()->get('CSSEditor\CssCleaner');
 
         $css = $controller->getRequest()->getPost('css', '');
-        $purifier->purify("<style>$css</style>");
+        $clean_css = $cssCleaner->clean($css);
 
-        $clean_css = $purifier->context->get('StyleBlocks');
-        $clean_css = $clean_css[0];
         $site_selected = $controller->getRequest()->getPost('site', '');
-        if ($site_selected == '') {
+        if ($site_selected) {
+            $this->setSiteOption($site_selected, 'css_editor_css', $clean_css);
+        } else {
             $this->setOption('css_editor_css', $clean_css);
-            return true;
         }
-
-        $this->setSiteOption($site_selected, 'css_editor_css', $clean_css);
 
         return true;
     }
