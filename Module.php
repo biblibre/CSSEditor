@@ -10,8 +10,6 @@ use Zend\EventManager\SharedEventManagerInterface;
 use Omeka\Event\Event;
 use Omeka\Module\AbstractModule;
 
-require __DIR__ . '/vendor/autoload.php';
-
 /**
  * CSS Editor
  * @copyright  Copyright 2014 Roy Rosenzweig Center for History and New Media
@@ -24,7 +22,13 @@ require __DIR__ . '/vendor/autoload.php';
  * @package  CSS Editor
  */
 
-class Module extends AbstractModule {
+class Module extends AbstractModule
+{
+    public function init()
+    {
+        require_once __DIR__ . '/vendor/autoload.php';
+    }
+
     public function getConfigForm(PhpRenderer $renderer) {
         $serviceLocator = $this->getServiceLocator();
         $settings = $serviceLocator->get('Omeka\Settings');
