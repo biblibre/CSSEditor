@@ -7,7 +7,7 @@ use Zend\Mvc\Controller\AbstractController;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\Form\Element\Textarea;
 use Zend\EventManager\SharedEventManagerInterface;
-use Omeka\Event\Event;
+use Zend\EventManager\Event;
 use Omeka\Module\AbstractModule;
 
 /**
