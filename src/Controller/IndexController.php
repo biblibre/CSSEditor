@@ -54,7 +54,7 @@ class IndexController extends AbstractActionController
     {
         $site = $this->api()->read('sites', $siteId)->getContent();
         $siteSettings = $this->siteSettings();
-        $siteSettings->setSite($site);
+        $siteSettings->setTargetId($siteId);
 
         return $siteSettings;
     }

@@ -125,9 +125,9 @@ class CSSEditorSiteControllerTest extends OmekaControllerTestCase
     protected function getSiteSettings()
     {
         $serviceLocator = $this->getServiceLocator();
-        $settings = $serviceLocator->get('Omeka\SiteSettings');
+        $settings = $serviceLocator->get('Omeka\Settings\Site');
 
-        $settings->setSite($this->site_test);
+        $settings->setTargetId($this->site_test->id());
         return $settings;
     }
 

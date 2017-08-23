@@ -65,11 +65,11 @@ class Module extends AbstractModule
 
     protected function setSiteOption($site_id, $name, $value) {
         $serviceLocator = $this->getServiceLocator();
-        $siteSettings = $serviceLocator->get('Omeka\SiteSettings');
+        $siteSettings = $serviceLocator->get('Omeka\Settings\Site');
         $entityManager = $serviceLocator->get('Omeka\EntityManager');
 
         if ($site = $entityManager->find('Omeka\Entity\Site', $site_id)) {
-            $siteSettings->setSite($site);
+            $siteSettings->setTargetId($site_id);
             return $siteSettings->set($name, $value);
         }
 
@@ -78,7 +78,7 @@ class Module extends AbstractModule
 
     public function appendCss(Event $event) {
         $serviceLocator = $this->getServiceLocator();
-        $siteSettings = $serviceLocator->get('Omeka\SiteSettings');
+        $siteSettings = $serviceLocator->get('Omeka\Settings\Site');
         $settings = $serviceLocator->get('Omeka\Settings');
         $routeMatch = $serviceLocator->get('Application')->getMvcEvent()->getRouteMatch();
         $isSite = $routeMatch->getParam('__SITE__');
