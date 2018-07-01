@@ -2,6 +2,7 @@
 namespace CSSEditor;
 
 use Omeka\Module\AbstractModule;
+use Omeka\Module\Exception\ModuleCannotInstallException;
 use Zend\Mvc\Controller\AbstractController;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\Form\Element\Textarea;
@@ -32,6 +33,18 @@ class Module extends AbstractModule
     public function getConfig()
     {
         return include __DIR__ . '/config/module.config.php';
+    }
+
+    public function install(ServiceLocatorInterface $serviceLocator)
+    {
+        $t = $serviceLocator->get('MvcTranslator');
+
+        $dependency = __DIR__ . '/vendor/cerdic/css-tidy/css_optimiser.php';
+        if (!file_exists($dependency)) {
+            throw new ModuleCannotInstallException(
+                sprintf($t->translate('The dependency "%s" should be installed.'), 'css-tidy') // @translate
+                . ' ' . $t->translate('See module’s installation documentation.')); // @translate
+        }
     }
 
     public function upgrade($oldVersion, $newVersion, ServiceLocatorInterface $serviceLocator)
