@@ -107,13 +107,16 @@ class Module extends AbstractModule
     public function appendCss(Event $event)
     {
         $serviceLocator = $this->getServiceLocator();
-        $siteSettings = $serviceLocator->get('Omeka\Settings\Site');
-        $settings = $serviceLocator->get('Omeka\Settings');
         $routeMatch = $serviceLocator->get('Application')->getMvcEvent()->getRouteMatch();
         $isSite = $routeMatch->getParam('__SITE__');
-        $view = $event->getTarget();
+        if (!$isSite) {
+            return;
+        }
 
-        if ($isSite && $css = $siteSettings->get('csseditor_css')) {
+        $siteSettings = $serviceLocator->get('Omeka\Settings\Site');
+        $settings = $serviceLocator->get('Omeka\Settings');
+        $view = $event->getTarget();
+        if ($css = $siteSettings->get('csseditor_css')) {
             $view->headStyle()->appendStyle($css);
         } elseif ($css = $settings->get('csseditor_css')) {
             $view->headStyle()->appendStyle($css);
