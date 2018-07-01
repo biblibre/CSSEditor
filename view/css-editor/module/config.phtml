@@ -12,8 +12,11 @@ $translate = $this->plugin('translate');
     </p>
     <div id="csseditor_site">
       <?php
-        echo $this->siteSelect('site', [
-            'empty_option' => $translate('Default'),
+        echo $this->siteSelect([
+            'name' => 'site',
+            'options' => [
+                'empty_option' => $translate('Default'),
+            ],
         ]);
       ?>
     </div>

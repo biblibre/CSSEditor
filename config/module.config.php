@@ -36,11 +36,6 @@ return [
             'CSSEditor\CssCleaner' => Service\CssCleanerFactory::class,
         ],
     ],
-    'view_helpers' => [
-        'invokables' => [
-            'siteSelect' => View\Helper\SiteSelect::class,
-        ],
-    ],
     'csseditor' => [
         'config' => [
             'csseditor_css' => '',
