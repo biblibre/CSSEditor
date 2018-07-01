@@ -45,6 +45,29 @@ class Module extends AbstractModule
                 sprintf($t->translate('The dependency "%s" should be installed.'), 'css-tidy') // @translate
                 . ' ' . $t->translate('See module’s installation documentation.')); // @translate
         }
+
+        $this->manageSettings($serviceLocator->get('Omeka\Settings'), 'install');
+    }
+
+    public function uninstall(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->manageSettings($serviceLocator->get('Omeka\Settings'), 'uninstall');
+    }
+
+    protected function manageSettings($settings, $process, $key = 'config')
+    {
+        $config = require __DIR__ . '/config/module.config.php';
+        $defaultSettings = $config[strtolower(__NAMESPACE__)][$key];
+        foreach ($defaultSettings as $name => $value) {
+            switch ($process) {
+                case 'install':
+                    $settings->set($name, $value);
+                    break;
+                case 'uninstall':
+                    $settings->delete($name);
+                    break;
+            }
+        }
     }
 
     public function upgrade($oldVersion, $newVersion, ServiceLocatorInterface $serviceLocator)
