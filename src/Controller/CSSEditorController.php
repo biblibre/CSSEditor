@@ -36,9 +36,9 @@ class CSSEditorController extends AbstractActionController
             $css = $this->cssCleaner->clean($css);
             if ($siteId) {
                 $siteSettings = $this->getSiteSettings($siteId);
-                $siteSettings->set('css_editor_css', $css);
+                $siteSettings->set('csseditor_css', $css);
             } else {
-                $this->settings()->set('css_editor_css', $css);
+                $this->settings()->set('csseditor_css', $css);
             }
         }
 
@@ -50,7 +50,7 @@ class CSSEditorController extends AbstractActionController
         }
 
         if ($settings) {
-            $response->setContent($settings->get('css_editor_css'));
+            $response->setContent($settings->get('csseditor_css'));
         }
 
         return $response;

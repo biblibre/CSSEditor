@@ -8,6 +8,7 @@ use Zend\Form\Element\Textarea;
 use Zend\EventManager\SharedEventManagerInterface;
 use Zend\EventManager\Event;
 use Zend\ModuleManager\ModuleManager;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * CSS Editor
@@ -33,6 +34,11 @@ class Module extends AbstractModule
         return include __DIR__ . '/config/module.config.php';
     }
 
+    public function upgrade($oldVersion, $newVersion, ServiceLocatorInterface $serviceLocator)
+    {
+        require_once 'data/scripts/upgrade.php';
+    }
+
     public function attachListeners(SharedEventManagerInterface $sharedEventManager)
     {
         $sharedEventManager->attach(
@@ -49,7 +55,7 @@ class Module extends AbstractModule
 
         $textarea = new Textarea('css');
         $textarea->setAttribute('rows', 15);
-        $textarea->setValue($settings->get('css_editor_css'));
+        $textarea->setValue($settings->get('csseditor_css'));
         $textarea->setAttribute('id', 'csseditor_cssvalue');
 
         return $renderer->render('css-editor/module/config', ['textarea' => $textarea]);
@@ -65,9 +71,9 @@ class Module extends AbstractModule
 
         $site_selected = $controller->getRequest()->getPost('site', '');
         if ($site_selected) {
-            $this->setSiteOption($site_selected, 'css_editor_css', $clean_css);
+            $this->setSiteOption($site_selected, 'csseditor_css', $clean_css);
         } else {
-            $this->setOption('css_editor_css', $clean_css);
+            $this->setOption('csseditor_css', $clean_css);
         }
 
         return true;
@@ -107,9 +113,9 @@ class Module extends AbstractModule
         $isSite = $routeMatch->getParam('__SITE__');
         $view = $event->getTarget();
 
-        if ($isSite && $css = $siteSettings->get('css_editor_css')) {
+        if ($isSite && $css = $siteSettings->get('csseditor_css')) {
             $view->headStyle()->appendStyle($css);
-        } elseif ($css = $settings->get('css_editor_css')) {
+        } elseif ($css = $settings->get('csseditor_css')) {
             $view->headStyle()->appendStyle($css);
         }
     }
