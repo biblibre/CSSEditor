@@ -1,8 +1,15 @@
 <?php
+namespace CSSEditor;
+
 return [
+    'view_manager' => [
+        'template_path_stack' => [
+            dirname(__DIR__) . '/view',
+        ],
+    ],
     'controllers' => [
         'factories' => [
-            'CSSEditor\Controller\Index' => 'CSSEditor\Service\Controller\IndexControllerFactory',
+            Controller\CSSEditorController::class => Service\Controller\CSSEditorControllerFactory::class,
         ],
     ],
     'router' =>[
@@ -15,28 +22,31 @@ return [
                             'route' => '/csseditor/browse[/:id]',
                             'defaults' => [
                                 '__NAMESPACE__' => 'CSSEditor\Controller',
-                                'controller' => 'Index',
+                                'controller' => 'CSSEditorController',
                                 'action' => 'browse',
                             ],
                         ],
-                    ]
-                ]
-            ]
-        ]
+                    ],
+                ],
+            ],
+        ],
     ],
     'service_manager' => [
         'factories' => [
-            'CSSEditor\CssCleaner' => 'CSSEditor\Service\CssCleanerFactory',
+            'CSSEditor\CssCleaner' => Service\CssCleanerFactory::class,
         ],
     ],
     'view_helpers' => [
         'invokables' => [
-            'siteSelect' => 'CSSEditor\View\Helper\SiteSelect',
+            'siteSelect' => View\Helper\SiteSelect::class,
         ],
     ],
-    'view_manager' => [
-        'template_path_stack' => [
-            __DIR__ . '/../view',
-        ]
-    ]
+    'csseditor' => [
+        'config' => [
+            'csseditor_css' => '',
+        ],
+        'site_settings' => [
+            'csseditor_css' => '',
+        ],
+    ],
 ];

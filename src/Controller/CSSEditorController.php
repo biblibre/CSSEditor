@@ -1,18 +1,24 @@
 <?php
 namespace CSSEditor\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
 use CSSEditor\Service\CssCleaner;
+use Zend\Mvc\Controller\AbstractActionController;
 
 /**
  * The plugin controller for css editor.
  *
  * @package CSSEditor
  */
-class IndexController extends AbstractActionController
+class CSSEditorController extends AbstractActionController
 {
+    /**
+     * @var CssCleaner
+     */
     protected $cssCleaner;
 
+    /**
+     * @param CssCleaner $cssCleaner
+     */
     public function __construct(CssCleaner $cssCleaner)
     {
         $this->cssCleaner = $cssCleaner;
