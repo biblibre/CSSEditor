@@ -12,7 +12,7 @@ return [
             Controller\CSSEditorController::class => Service\Controller\CSSEditorControllerFactory::class,
         ],
     ],
-    'router' =>[
+    'router' => [
         'routes' => [
             'admin' => [
                 'child_routes' => [

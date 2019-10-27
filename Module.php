@@ -22,7 +22,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @package  CSS Editor
  */
-
 class Module extends AbstractModule
 {
     public function init(ModuleManager $moduleManager)
@@ -118,7 +117,7 @@ class Module extends AbstractModule
     protected function setOption($name, $value)
     {
         $serviceLocator = $this->getServiceLocator();
-        return $serviceLocator->get('Omeka\Settings')->set($name,$value);
+        return $serviceLocator->get('Omeka\Settings')->set($name, $value);
     }
 
     protected function setSiteOption($site_id, $name, $value)

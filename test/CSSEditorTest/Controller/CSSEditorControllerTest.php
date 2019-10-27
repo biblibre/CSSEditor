@@ -25,14 +25,13 @@ class CSSEditorAdminControllerTest extends OmekaControllerTestCase
         $settings = $this->getServiceLocator()->get('Omeka\Settings');
 
         $this->postDispatch('/admin/module/configure?id=CSSEditor', [
-            'css' => "h1{display:none;}"
+            'css' => "h1{display:none;}",
         ]);
 
         $csseditor_css = $settings->get('csseditor_css');
         $this->assertEquals("h1 {\ndisplay:none\n}", $csseditor_css);
     }
 }
-
 
 class CSSEditorSiteControllerTest extends OmekaControllerTestCase
 {
@@ -62,7 +61,7 @@ class CSSEditorSiteControllerTest extends OmekaControllerTestCase
         $this->setSettings('csseditor_css', 'h1 {display:none}');
         $this->dispatch('/s/test');
         $this->assertXPathQuery('//style[@type="text/css"][@media="screen"]');
-        $this->assertContains('h1 {display:none}',$this->getResponse()->getContent());
+        $this->assertContains('h1 {display:none}', $this->getResponse()->getContent());
     }
 
     /** @test */
@@ -81,7 +80,7 @@ class CSSEditorSiteControllerTest extends OmekaControllerTestCase
     {
         $this->postDispatch('/admin/module/configure?id=CSSEditor', [
             'css' => "h1{display:inline;}",
-            'site' => $this->site_test->id()
+            'site' => $this->site_test->id(),
         ]);
         $this->assertEquals("h1 {\ndisplay:inline\n}", $this->getSiteSettings()->get('csseditor_css'));
     }
@@ -89,13 +88,13 @@ class CSSEditorSiteControllerTest extends OmekaControllerTestCase
     /** @test */
     public function postBrowseBeSavedForASiteAndReturnDefaultValue()
     {
-        $this->setSettings('csseditor_css','div {display:none}');
+        $this->setSettings('csseditor_css', 'div {display:none}');
         $this->postDispatch('/admin/csseditor/browse', [
             'css' => "h1{display:inline;}",
             'site' => $this->site_test->id(),
         ]);
         $this->assertResponseStatusCode(200);
-        $this->assertContains('div {',$this->getResponse()->getContent());
+        $this->assertContains('div {', $this->getResponse()->getContent());
         $this->assertEquals("h1 {\ndisplay:inline\n}", $this->getSiteSettings()->get('csseditor_css'));
     }
 
@@ -104,10 +103,10 @@ class CSSEditorSiteControllerTest extends OmekaControllerTestCase
     {
         $this->postDispatch('/admin/csseditor/browse/' . $this->site_test2->id(), [
             'css' => "h1{display:inline;}",
-            'site' => $this->site_test->id()
+            'site' => $this->site_test->id(),
         ]);
 
-        $this->assertEquals('', $this->getResponse()->getContent() );
+        $this->assertEquals('', $this->getResponse()->getContent());
         $this->assertEquals("h1 {\ndisplay:inline\n}", $this->getSiteSettings()->get('csseditor_css'));
     }
 
