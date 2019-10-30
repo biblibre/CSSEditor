@@ -1,35 +1,40 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "hash": "f3505ccfbbfa684c0311c6f82c7b0785",
-    "content-hash": "396d7cf0ec8d419eb3cfaf5149dc3bc8",
+    "content-hash": "41441dc94e466d5f1dfe766a2fe44037",
     "packages": [
         {
             "name": "cerdic/css-tidy",
-            "version": "v1.5.5",
+            "version": "v1.5.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Cerdic/CSSTidy.git",
-                "reference": "b0c1bda3be5a35da44ba1ac28cc61c67d2ada465"
+                "reference": "226bca013a4dc58b6471931564c6b568af2b66e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Cerdic/CSSTidy/zipball/b0c1bda3be5a35da44ba1ac28cc61c67d2ada465",
-                "reference": "b0c1bda3be5a35da44ba1ac28cc61c67d2ada465",
+                "url": "https://api.github.com/repos/Cerdic/CSSTidy/zipball/226bca013a4dc58b6471931564c6b568af2b66e9",
+                "reference": "226bca013a4dc58b6471931564c6b568af2b66e9",
                 "shasum": ""
+            },
+            "require-dev": {
+                "pear/text_diff": "^1.2",
+                "simpletest/simpletest": "^1.1"
             },
             "type": "library",
             "autoload": {
                 "classmap": [
-                    "."
+                    "class.csstidy_optimise.php",
+                    "class.csstidy_print.php",
+                    "class.csstidy.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "LGPL-2.1"
+                "LGPL-2.1-or-later"
             ],
             "authors": [
                 {
@@ -38,7 +43,7 @@
                 }
             ],
             "description": "CSSTidy is a CSS minifier",
-            "time": "2015-11-28 21:47:43"
+            "time": "2018-04-10T09:09:46+00:00"
         }
     ],
     "packages-dev": [
@@ -48,12 +53,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/biblibre/omeka-s-test-helper.git",
-                "reference": "273de64af06e59c61f1d65c40cecca1c6d3ab873"
+                "reference": "a02c8dc4259365f7de1d09626a97347ba19cbf6e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/biblibre/omeka-s-test-helper/zipball/273de64af06e59c61f1d65c40cecca1c6d3ab873",
-                "reference": "273de64af06e59c61f1d65c40cecca1c6d3ab873",
+                "url": "https://api.github.com/repos/biblibre/omeka-s-test-helper/zipball/a02c8dc4259365f7de1d09626a97347ba19cbf6e",
+                "reference": "a02c8dc4259365f7de1d09626a97347ba19cbf6e",
                 "shasum": ""
             },
             "require": {
@@ -75,7 +80,7 @@
                 "omeka",
                 "test"
             ],
-            "time": "2016-09-12 14:48:42"
+            "time": "2016-09-22T16:40:26+00:00"
         }
     ],
     "aliases": [],

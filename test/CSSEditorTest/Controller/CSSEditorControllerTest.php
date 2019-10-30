@@ -25,14 +25,13 @@ class CSSEditorAdminControllerTest extends OmekaControllerTestCase
         $settings = $this->getServiceLocator()->get('Omeka\Settings');
 
         $this->postDispatch('/admin/module/configure?id=CSSEditor', [
-            'css' => "h1{display:none;}"
+            'css' => "h1{display:none;}",
         ]);
 
-        $css_editor_css = $settings->get('css_editor_css');
-        $this->assertEquals("h1 {\ndisplay:none\n}", $css_editor_css);
+        $csseditor_css = $settings->get('csseditor_css');
+        $this->assertEquals("h1 {\ndisplay:none\n}", $csseditor_css);
     }
 }
-
 
 class CSSEditorSiteControllerTest extends OmekaControllerTestCase
 {
@@ -59,17 +58,17 @@ class CSSEditorSiteControllerTest extends OmekaControllerTestCase
     /** @test */
     public function displayPublicPageShouldLoadCss()
     {
-        $this->setSettings('css_editor_css', 'h1 {display:none}');
+        $this->setSettings('csseditor_css', 'h1 {display:none}');
         $this->dispatch('/s/test');
         $this->assertXPathQuery('//style[@type="text/css"][@media="screen"]');
-        $this->assertContains('h1 {display:none}',$this->getResponse()->getContent());
+        $this->assertContains('h1 {display:none}', $this->getResponse()->getContent());
     }
 
     /** @test */
     public function displayPublicSitePageShouldLoadSpecificCss()
     {
-        $this->setSettings('css_editor_css', 'h1 {display:none}');
-        $this->getSiteSettings()->set('css_editor_css', 'h2 { color:black;}');
+        $this->setSettings('csseditor_css', 'h1 {display:none}');
+        $this->getSiteSettings()->set('csseditor_css', 'h2 { color:black;}');
         $this->dispatch('/s/test');
         $this->assertXPathQuery('//style[@type="text/css"][@media="screen"]');
         $this->assertContains('h2 { color:black;}', $this->getResponse()->getContent());
@@ -81,22 +80,22 @@ class CSSEditorSiteControllerTest extends OmekaControllerTestCase
     {
         $this->postDispatch('/admin/module/configure?id=CSSEditor', [
             'css' => "h1{display:inline;}",
-            'site' => $this->site_test->id()
+            'site' => $this->site_test->id(),
         ]);
-        $this->assertEquals("h1 {\ndisplay:inline\n}", $this->getSiteSettings()->get('css_editor_css'));
+        $this->assertEquals("h1 {\ndisplay:inline\n}", $this->getSiteSettings()->get('csseditor_css'));
     }
 
     /** @test */
     public function postBrowseBeSavedForASiteAndReturnDefaultValue()
     {
-        $this->setSettings('css_editor_css','div {display:none}');
+        $this->setSettings('csseditor_css', 'div {display:none}');
         $this->postDispatch('/admin/csseditor/browse', [
             'css' => "h1{display:inline;}",
             'site' => $this->site_test->id(),
         ]);
         $this->assertResponseStatusCode(200);
-        $this->assertContains('div {',$this->getResponse()->getContent());
-        $this->assertEquals("h1 {\ndisplay:inline\n}", $this->getSiteSettings()->get('css_editor_css'));
+        $this->assertContains('div {', $this->getResponse()->getContent());
+        $this->assertEquals("h1 {\ndisplay:inline\n}", $this->getSiteSettings()->get('csseditor_css'));
     }
 
     /** @test */
@@ -104,11 +103,11 @@ class CSSEditorSiteControllerTest extends OmekaControllerTestCase
     {
         $this->postDispatch('/admin/csseditor/browse/' . $this->site_test2->id(), [
             'css' => "h1{display:inline;}",
-            'site' => $this->site_test->id()
+            'site' => $this->site_test->id(),
         ]);
 
-        $this->assertEquals('', $this->getResponse()->getContent() );
-        $this->assertEquals("h1 {\ndisplay:inline\n}", $this->getSiteSettings()->get('css_editor_css'));
+        $this->assertEquals('', $this->getResponse()->getContent());
+        $this->assertEquals("h1 {\ndisplay:inline\n}", $this->getSiteSettings()->get('csseditor_css'));
     }
 
     /** @test */
@@ -119,7 +118,7 @@ class CSSEditorSiteControllerTest extends OmekaControllerTestCase
             'site' => '',
         ]);
         $this->assertEquals('', $this->getResponse()->getContent());
-        $this->assertEquals("h1 {\ndisplay:inline\n}", $this->getServiceLocator()->get('Omeka\Settings')->get('css_editor_css'));
+        $this->assertEquals("h1 {\ndisplay:inline\n}", $this->getServiceLocator()->get('Omeka\Settings')->get('csseditor_css'));
     }
 
     protected function getSiteSettings()
